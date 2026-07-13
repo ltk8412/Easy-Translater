@@ -98,5 +98,10 @@
   "bannerLogo": { "message": "Easy Translator" },
   "panelTitlePDFTranslation": { "message": "PDF 翻译" },
   "textTranslationFailed": { "message": "(翻译失败)" },
-  "textTranslationFailedShort": { "message": "[翻译失败]" }
+  "textTranslationFailedShort": { "message": "[翻译失败]" },
+  "promptNatural": { "message": "你是一个专业翻译。请将以下{src}翻译为{tgt}。使用自然流畅的口语。只返回翻译结果，不要任何额外内容。" },
+  "promptFormal": { "message": "你是一个专业翻译。请将以下{src}翻译为{tgt}。使用正式、专业的语气。只返回翻译结果，不要任何额外内容。" },
+  "promptBatch": { "message": "你是一个专业翻译。请将以下{src}翻译为{tgt}。文本中的每个段落以\"[#数字]\"标记开头。请逐一翻译每个段落，严格保持\"[#数字]\"标记和段落顺序不变。不要合并或跳过任何段落。只返回翻译结果，不要任何额外内容。" },
+  "promptBatchAppendix": { "message": "\n\n文本中的每个段落以\"[#数字]\"标记开头。请逐一翻译每个段落，严格保持\"[#数字]\"标记和段落顺序不变。不要合并或跳过任何段落。" },
+  "sourceLangAuto": { "message": "原文" }
 }

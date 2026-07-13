@@ -98,5 +98,10 @@
   "bannerLogo": { "message": "Easy Translator" },
   "panelTitlePDFTranslation": { "message": "PDF 번역" },
   "textTranslationFailed": { "message": "(번역 실패)" },
-  "textTranslationFailedShort": { "message": "[번역 실패]" }
+  "textTranslationFailedShort": { "message": "[번역 실패]" },
+  "promptNatural": { "message": "당신은 전문 번역가입니다. 다음 {src}을(를) {tgt}(으)로 번역하세요. 자연스럽고 유창한 어조를 사용하세요. 번역 결과만 반환하고 다른 내용은 포함하지 마세요." },
+  "promptFormal": { "message": "당신은 전문 번역가입니다. 다음 {src}을(를) {tgt}(으)로 번역하세요. 격식 있고 전문적인 어조를 사용하세요. 번역 결과만 반환하고 다른 내용은 포함하지 마세요." },
+  "promptBatch": { "message": "당신은 전문 번역가입니다. 다음 {src}을(를) {tgt}(으)로 번역하세요. 각 단락은 \"[#번호]\" 마커로 시작합니다. 각 단락을 하나씩 번역하고 \"[#번호]\" 마커와 단락 순서를 엄격히 유지하세요. 단락을 병합하거나 건너뛰지 마세요. 번역 결과만 반환하고 다른 내용은 포함하지 마세요." },
+  "promptBatchAppendix": { "message": "\n\n텍스트의 각 단락은 \"[#번호]\" 마커로 시작합니다. 각 단락을 하나씩 번역하고 \"[#번호]\" 마커와 단락 순서를 엄격히 유지하세요. 단락을 병합하거나 건너뛰지 마세요." },
+  "sourceLangAuto": { "message": "원문" }
 }

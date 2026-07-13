@@ -98,5 +98,10 @@
   "bannerLogo": { "message": "Easy Translator" },
   "panelTitlePDFTranslation": { "message": "Dịch PDF" },
   "textTranslationFailed": { "message": "(Dịch thất bại)" },
-  "textTranslationFailedShort": { "message": "[Dịch thất bại]" }
+  "textTranslationFailedShort": { "message": "[Dịch thất bại]" },
+  "promptNatural": { "message": "Bạn là một dịch giả chuyên nghiệp. Hãy dịch văn bản sau từ {src} sang {tgt}. Sử dụng giọng văn tự nhiên, trôi chảy. Chỉ trả về kết quả dịch, không thêm nội dung khác." },
+  "promptFormal": { "message": "Bạn là một dịch giả chuyên nghiệp. Hãy dịch văn bản sau từ {src} sang {tgt}. Sử dụng giọng văn trang trọng, chuyên nghiệp. Chỉ trả về kết quả dịch, không thêm nội dung khác." },
+  "promptBatch": { "message": "Bạn là một dịch giả chuyên nghiệp. Hãy dịch văn bản sau từ {src} sang {tgt}. Mỗi đoạn văn bản được đánh dấu bằng \"[#số]\" ở đầu. Hãy dịch từng đoạn một, giữ nguyên đánh dấu \"[#số]\" và thứ tự các đoạn. Không gộp hoặc bỏ qua bất kỳ đoạn nào. Chỉ trả về kết quả dịch, không thêm nội dung khác." },
+  "promptBatchAppendix": { "message": "\n\nMỗi đoạn văn bản được đánh dấu bằng \"[#số]\" ở đầu. Hãy dịch từng đoạn một, giữ nguyên đánh dấu \"[#số]\" và thứ tự các đoạn. Không gộp hoặc bỏ qua bất kỳ đoạn nào." },
+  "sourceLangAuto": { "message": "ngôn ngữ gốc" }
 }

@@ -98,5 +98,10 @@
   "bannerLogo": { "message": "Easy Translator" },
   "panelTitlePDFTranslation": { "message": "PDF 翻訳" },
   "textTranslationFailed": { "message": "(翻訳失敗)" },
-  "textTranslationFailedShort": { "message": "[翻訳失敗]" }
+  "textTranslationFailedShort": { "message": "[翻訳失敗]" },
+  "promptNatural": { "message": "あなたはプロの翻訳者です。以下の{src}を{tgt}に翻訳してください。自然で流暢な言葉遣いを使用すること。翻訳結果のみを返し、余計な内容は一切含めないでください。" },
+  "promptFormal": { "message": "あなたはプロの翻訳者です。以下の{src}を{tgt}に翻訳してください。フォーマルで専門的な言葉遣いを使用すること。翻訳結果のみを返し、余計な内容は一切含めないでください。" },
+  "promptBatch": { "message": "あなたはプロの翻訳者です。以下の{src}を{tgt}に翻訳してください。各段落は先頭に\"[#番号]\"マーカーが付いています。各段落を順番に翻訳し、\"[#番号]\"マーカーと段落の順序を厳密に保持してください。段落を結合したりスキップしたりしないでください。翻訳結果のみを返し、余計な内容は一切含めないでください。" },
+  "promptBatchAppendix": { "message": "\n\nテキスト内の各段落は先頭に\"[#番号]\"マーカーが付いています。各段落を順番に翻訳し、\"[#番号]\"マーカーと段落の順序を厳密に保持してください。段落を結合したりスキップしたりしないでください。" },
+  "sourceLangAuto": { "message": "原文" }
 }

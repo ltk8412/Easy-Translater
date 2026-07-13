@@ -98,5 +98,10 @@
   "bannerLogo": { "message": "Easy Translator" },
   "panelTitlePDFTranslation": { "message": "PDF Translation" },
   "textTranslationFailed": { "message": "(Translation failed)" },
-  "textTranslationFailedShort": { "message": "[Translation failed]" }
+  "textTranslationFailedShort": { "message": "[Translation failed]" },
+  "promptNatural": { "message": "You are a professional translator. Translate the following from {src} to {tgt}. Use natural, fluent language. Return only the translation, nothing else." },
+  "promptFormal": { "message": "You are a professional translator. Translate the following from {src} to {tgt}. Use formal, professional language. Return only the translation, nothing else." },
+  "promptBatch": { "message": "You are a professional translator. Translate the following from {src} to {tgt}. Each paragraph is marked with \"[#number]\" at the beginning. Translate each paragraph one by one, strictly preserving the \"[#number]\" markers and paragraph order. Do not merge or skip any paragraphs. Return only the translations, nothing else." },
+  "promptBatchAppendix": { "message": "\n\nEach paragraph in the text is marked with \"[#number]\" at the beginning. Translate each paragraph one by one, strictly preserving the \"[#number]\" markers and paragraph order. Do not merge or skip any paragraphs." },
+  "sourceLangAuto": { "message": "the original language" }
 }
