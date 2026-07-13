@@ -16,6 +16,7 @@
   let tooltip = null;
   let selectedText = '';
   let currentDisplayMode = 'tooltip';
+  let enableSelectionPopup = true;
 
   let fullPageState = null;
   let abortFlag = null;
@@ -33,6 +34,7 @@
       const res = await chrome.runtime.sendMessage({ action: 'getSettings' });
       if (res?.settings) {
         currentDisplayMode = res.settings.displayMode || 'tooltip';
+        enableSelectionPopup = res.settings.enableSelectionPopup !== false;
         return res.settings;
       }
     } catch (e) {
@@ -90,6 +92,8 @@
     }
   });
 
+  loadSettings();
+
   document.addEventListener('keydown', (e) => {
     if (e.altKey && e.code === 'KeyT' && !e.ctrlKey && !e.metaKey) {
       e.preventDefault();
@@ -108,6 +112,7 @@
       const sel = window.getSelection();
       const text = sel?.toString().trim();
       removeFloatBtn();
+      if (!enableSelectionPopup) return;
       if (text && text.length > 0 && text.length < 5000) {
         const range = sel.getRangeAt(0);
         const rect = range.getBoundingClientRect();

@@ -45,6 +45,7 @@ function applySettings(s) {
   els.targetLang.value = s.targetLang || getDefaultTargetLang();
   els.style.value = s.style || 'natural';
   els.displayMode.value = s.displayMode || 'tooltip';
+  els.enableSelectionPopup.checked = s.enableSelectionPopup !== false;
 }
 
 function collectSettings() {
@@ -58,6 +59,7 @@ function collectSettings() {
     targetLang: els.targetLang.value,
     style: els.style.value,
     displayMode: els.displayMode.value,
+    enableSelectionPopup: els.enableSelectionPopup.checked,
     customPrompts: window.PromptManager ? window.PromptManager.getPrompts() : {},
     activePrompt: promptSel ? promptSel.value : 'default'
   };
