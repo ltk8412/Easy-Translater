@@ -15,7 +15,7 @@
   "swapLang": { "message": "交换语言" },
   "providerLabel": { "message": "API 提供商" },
   "apiUrlLabel": { "message": "API 地址" },
-  "apiKeyLabel": { "message": "API Key" },
+  "apiKeyLabel": { "message": "API 密钥" },
   "modelLabel": { "message": "模型名称" },
   "styleLabel": { "message": "翻译风格" },
   "styleNatural": { "message": "自然流畅" },

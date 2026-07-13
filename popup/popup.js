@@ -3,7 +3,7 @@ const CONFIG_KEYS = ['provider', 'apiUrl', 'apiKey', 'model', 'sourceLang', 'tar
 
 function getDefaultTargetLang() {
   const code = (navigator.language || 'en').split('-')[0].toLowerCase();
-  const map = { zh: '中文', en: 'English', ja: '日本語', ko: '한국어', fr: 'Français', de: 'Deutsch', es: 'Español', ru: 'Русский' };
+  const map = { zh: '中文', en: 'English', ja: '日本語', ko: '한국어', vi: 'Tiếng Việt', fr: 'Français', de: 'Deutsch', es: 'Español', ru: 'Русский' };
   return map[code] || 'English';
 }
 
