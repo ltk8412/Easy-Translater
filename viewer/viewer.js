@@ -12,11 +12,14 @@
   let pdfDoc = null;
   let currentPage = 1;
   let totalPages = 0;
-  let allParagraphs = [];       // [{ page, lines: [{ text, spans }] }]
-  let originalTexts = [];       // flat array of paragraph texts
-  let translatedTexts = [];     // flat array of translated texts
+  let allParagraphs = [];
+  let originalTexts = [];
+  let translatedTexts = [];
   let isTranslated = false;
   let settings = {};
+
+  const t = (k) => window.i18nGet ? window.i18nGet(k) : k;
+  const tf = (k, v) => window.i18nFormat ? window.i18nFormat(k, v) : k;
 
   const container = document.getElementById('viewer-container');
   const loading = document.getElementById('loading');
@@ -37,7 +40,7 @@
     const params = new URLSearchParams(window.location.search);
     const src = params.get('src');
     const id = params.get('id');
-    if (!src && !id) { loading.textContent = '缺少文件参数'; return; }
+    if (!src && !id) { loading.textContent = t('errorMissingFileParam'); return; }
     if (id && id.startsWith('office_')) { await initOfficeFile(id); return; }
     await initPDF(src, id);
   }
@@ -47,19 +50,19 @@
     if (src) { pdfData = src; }
     else if (id) {
       pdfData = await loadFromBg(id);
-      if (!pdfData) { loading.textContent = '无法加载 PDF 数据'; return; }
+      if (!pdfData) { loading.textContent = t('errorCannotLoadPDF'); return; }
     }
 
     try {
       pdfDoc = await pdfjsLib.getDocument(pdfData).promise;
       totalPages = Math.min(pdfDoc.numPages, MAX_PAGES);
-      pageInfo.textContent = `${totalPages} pages`;
+      pageInfo.textContent = tf('pageInfoPages', { total: totalPages });
       updateNav();
       await renderAllPages();
       loading.style.display = 'none';
       translateBtn.disabled = false;
     } catch (err) {
-      loading.textContent = 'PDF 解析失败: ' + err.message;
+      loading.textContent = t('errorPDFParse') + ' ' + err.message;
     }
   }
 
@@ -72,23 +75,20 @@
     container.querySelectorAll('.pdf-page-wrapper').forEach(p => p.remove());
 
     for (let i = 1; i <= totalPages; i++) {
-      loading.textContent = `正在渲染... ${i}/${totalPages} 页`;
+      loading.textContent = tf('statusRendering', { i, total: totalPages }) + ' ' + tf('pageInfoPages', { total: totalPages });
       const page = await pdfDoc.getPage(i);
       const viewport = page.getViewport({ scale: SCALE });
 
-      // Render page image
       const canvas = document.createElement('canvas');
       canvas.width = viewport.width;
       canvas.height = viewport.height;
       const ctx = canvas.getContext('2d');
       await page.render({ canvasContext: ctx, viewport }).promise;
 
-      // Create page wrapper with image + translation panel container
       const wrapper = document.createElement('div');
       wrapper.className = 'pdf-page-wrapper';
       wrapper.dataset.page = i;
 
-      // Page image
       const imgDiv = document.createElement('div');
       imgDiv.className = 'pdf-page-img';
       imgDiv.style.width = viewport.width + 'px';
@@ -96,17 +96,14 @@
       imgDiv.style.backgroundImage = `url(${canvas.toDataURL()})`;
       wrapper.appendChild(imgDiv);
 
-      // Extract text and group into paragraphs
       const textContent = await page.getTextContent();
       const paragraphs = groupIntoParagraphs(textContent.items, viewport.height);
       allParagraphs.push({ page: i, paragraphs });
 
-      // Collect paragraph texts for translation
       for (const para of paragraphs) {
         originalTexts.push(para.text);
       }
 
-      // Translation panel (hidden until translated)
       const panel = document.createElement('div');
       panel.className = 'pdf-trans-panel';
       panel.style.display = 'none';
@@ -118,11 +115,9 @@
     }
   }
 
-  // Group text items into paragraphs by spatial clustering
   function groupIntoParagraphs(items, pageHeight) {
     if (!items || items.length === 0) return [];
 
-    // Filter empty and sort by Y descending (pdf.js Y axis goes up), then X ascending
     const filtered = items
       .filter(item => item.str && item.str.trim().length > 0)
       .map(item => ({
@@ -133,16 +128,15 @@
         h: item.height
       }))
       .sort((a, b) => {
-        const yDiff = b.y - a.y; // descending Y = top-to-bottom in page coords
+        const yDiff = b.y - a.y;
         if (Math.abs(yDiff) < 3) return a.x - b.x;
         return yDiff;
       });
 
-    // Group into lines by Y proximity
     const lines = [];
     let curLine = null;
     const LINE_TOLERANCE = 2;
-    const PARA_GAP = 8; // larger Y gap = new paragraph
+    const PARA_GAP = 8;
 
     for (const item of filtered) {
       if (!curLine || Math.abs(item.y - curLine.y) > LINE_TOLERANCE) {
@@ -154,7 +148,6 @@
     }
     if (curLine) lines.push(curLine);
 
-    // Group lines into paragraphs by Y gap
     const paragraphs = [];
     let curPara = null;
 
@@ -171,8 +164,6 @@
 
     return paragraphs;
   }
-
-  // ─── Navigation ─────────────────────────────────
 
   function scrollToPage(n) {
     const el = container.querySelector(`.pdf-page-wrapper[data-page="${n}"]`);
@@ -206,8 +197,6 @@
     if (nearest !== currentPage) { currentPage = nearest; updateNav(); }
   }, { passive: true });
 
-  // ─── Translation ────────────────────────────────
-
   translateBtn.addEventListener('click', async () => {
     if (isTranslated) { toggleTranslation(); return; }
     await translateAll();
@@ -215,12 +204,12 @@
   toggleBtn.addEventListener('click', toggleTranslation);
 
   async function translateAll() {
-    if (!settings.apiKey) { alert('请先配置 API Key'); return; }
+    if (!settings.apiKey) { alert(t('errorApiKeyRequired')); return; }
     settings.sourceLang = sourceLang.value;
     settings.targetLang = targetLang.value;
 
     translateBtn.disabled = true;
-    translateBtn.textContent = '翻译中...';
+    translateBtn.textContent = t('statusTranslating');
 
     translatedTexts = new Array(originalTexts.length).fill(null);
     const items = originalTexts.map((text, i) => ({ text: text.trim(), idx: i }))
@@ -249,22 +238,20 @@
           }
         } catch (err) { console.warn('Chunk error:', err); }
         completed += chunk.length;
-        translateBtn.textContent = `翻译中... ${Math.min(completed, items.length)}/${items.length}`;
+        translateBtn.textContent = tf('statusTranslatingProgress', { completed: Math.min(completed, items.length), total: items.length });
       }
     }
 
     await Promise.all(Array(workerCount).fill(null).map(() => worker()));
 
-    // Build translation panels
     buildTranslationPanels();
     container.querySelectorAll('.pdf-trans-panel').forEach(p => p.style.display = 'block');
     isTranslated = true;
-    translateBtn.textContent = (window.i18nGet ? window.i18nGet('translateBtn') : '翻译') + ' ✓';
+    translateBtn.textContent = t('translateBtn') + ' ✓';
     toggleBtn.style.display = 'inline-block';
-    toggleBtn.textContent = '↩ ' + (window.i18nGet ? window.i18nGet('viewerToggleOrig') : '原文');
+    toggleBtn.textContent = '↩ ' + t('viewerToggleOrig');
   }
 
-  // Build translation panel content for each page
   function buildTranslationPanels() {
     let paraIdx = 0;
     const wrappers = container.querySelectorAll('.pdf-page-wrapper');
@@ -290,7 +277,7 @@
 
         const transDiv = document.createElement('div');
         transDiv.className = 'trans-text';
-        transDiv.textContent = trans || '(翻译失败)';
+        transDiv.textContent = trans || t('textTranslationFailed');
 
         row.appendChild(origDiv);
         row.appendChild(transDiv);
@@ -301,8 +288,8 @@
 
   function toggleTranslation() {
     if (!isTranslated || translatedTexts.length === 0) return;
-    const origLabel = window.i18nGet ? window.i18nGet('viewerToggleOrig') : '原文';
-    const transLabel = window.i18nGet ? window.i18nGet('viewerToggleTrans') : '译文';
+    const origLabel = t('viewerToggleOrig');
+    const transLabel = t('viewerToggleTrans');
     const showingTrans = toggleBtn.textContent.includes(origLabel);
     if (showingTrans) {
       container.querySelectorAll('.pdf-trans-panel').forEach(p => p.style.display = 'none');
@@ -313,18 +300,16 @@
     }
   }
 
-  // ─── Office files ────────────────────────────────
-
   async function initOfficeFile(id) {
-    loading.textContent = '正在加载文件...';
+    loading.textContent = t('statusLoadingFile');
     const data = await loadFromBg(id);
-    if (!data) { loading.textContent = '无法加载文件数据'; return; }
+    if (!data) { loading.textContent = t('errorCannotLoadFile'); return; }
     const text = new TextDecoder('utf-8').decode(data);
-    if (!text.trim()) { loading.textContent = '文件内容为空'; return; }
+    if (!text.trim()) { loading.textContent = t('errorFileEmpty'); return; }
 
     const pars = text.split(/\n\s*\n/).filter(p => p.trim().length > 0);
     totalPages = 1;
-    pageInfo.textContent = `共 ${pars.length} 段`;
+    pageInfo.textContent = tf('officeParagraphCount', { count: pars.length });
     prevBtn.style.display = 'none'; nextBtn.style.display = 'none';
 
     const wrapper = document.createElement('div');
@@ -356,8 +341,6 @@
     loading.style.display = 'none';
     translateBtn.disabled = false;
   }
-
-  // ─── Helpers ────────────────────────────────────
 
   async function loadFromBg(id) {
     try {

@@ -3,16 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PDF Translator</title>
+  <title data-i18n="viewerPageTitle">PDF Translator</title>
   <link rel="stylesheet" href="viewer.css">
 </head>
 <body>
   <div id="toolbar">
-    <span class="toolbar-title" data-i18n="viewerTitle">PDF 翻译</span>
+    <span class="toolbar-title" data-i18n="viewerTitle">PDF Translator</span>
     <span id="page-info"></span>
     <div class="toolbar-spacer"></div>
     <select id="source-lang" class="tb-select">
-      <option value="auto" data-i18n="autoDetect">自动检测</option>
+      <option value="auto" data-i18n="autoDetect">Auto Detect</option>
       <option value="English">English</option>
       <option value="中文">中文</option>
       <option value="日本語">日本語</option>
@@ -33,14 +33,14 @@
       <option value="Deutsch">Deutsch</option>
       <option value="Español">Español</option>
     </select>
-    <button id="translate-btn" class="tb-btn tb-primary">🌐 <span data-i18n="viewerTranslate">翻译</span></button>
-    <button id="toggle-btn" class="tb-btn" style="display:none">↩ <span data-i18n="viewerToggleOrig">原文</span></button>
-    <button id="prev-btn" class="tb-btn" disabled>◀</button>
+    <button id="translate-btn" class="tb-btn tb-primary">🌐 <span data-i18n="viewerTranslate">Translate</span></button>
+    <button id="toggle-btn" class="tb-btn" style="display:none">↩ <span data-i18n="viewerToggleOrig">Show Original</span></button>
+    <button id="prev-btn" class="tb-btn" disabled data-i18n-title="viewerPrevPage" title="Previous Page">◀</button>
     <span id="page-num"></span>
-    <button id="next-btn" class="tb-btn" disabled>▶</button>
+    <button id="next-btn" class="tb-btn" disabled data-i18n-title="viewerNextPage" title="Next Page">▶</button>
   </div>
   <div id="viewer-container">
-    <div id="loading">Loading PDF...</div>
+    <div id="loading" data-i18n="viewerLoadingPDF">Loading PDF...</div>
   </div>
 
   <script src="../i18n.js"></script>

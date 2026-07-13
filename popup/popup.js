@@ -111,7 +111,6 @@ async function fetchOllamaModels() {
         opt.value = m;
         datalist.appendChild(opt);
       });
-      // 默认选第一个已安装的模型
       if (!els.model.value || els.model.value === 'llama3.2') {
         els.model.value = result.models[0];
       }
@@ -146,7 +145,7 @@ els.refreshModels.addEventListener('click', async () => {
   const apiKey = els.apiKey.value;
   const apiUrl = els.apiUrl.value;
 
-  showStatus('正在获取模型列表...', 'info');
+  showStatus(window.i18nGet('statusFetchingModels'), 'info');
   try {
     const result = await chrome.runtime.sendMessage({
       action: 'getModels',
@@ -160,14 +159,14 @@ els.refreshModels.addEventListener('click', async () => {
         opt.value = m;
         datalist.appendChild(opt);
       });
-      showStatus('模型列表已更新', 'success');
+      showStatus(window.i18nGet('statusModelsUpdated'), 'success');
     } else {
       updateModelList(provider);
-      showStatus('已加载默认模型列表', 'info');
+      showStatus(window.i18nGet('statusDefaultModelsLoaded'), 'info');
     }
   } catch {
     updateModelList(provider);
-    showStatus('已加载默认模型列表', 'info');
+    showStatus(window.i18nGet('statusDefaultModelsLoaded'), 'info');
   }
 });
 
@@ -192,7 +191,7 @@ els.translateBtn.addEventListener('click', async () => {
 
   const settings = collectSettings();
   els.translateBtn.disabled = true;
-  els.translateBtn.textContent = '翻译中...';
+  els.translateBtn.textContent = window.i18nGet('statusTranslating');
 
   try {
     const result = await chrome.runtime.sendMessage({
@@ -211,7 +210,7 @@ els.translateBtn.addEventListener('click', async () => {
     showStatus(err.message, 'error');
   } finally {
     els.translateBtn.disabled = false;
-    els.translateBtn.textContent = '翻译';
+    els.translateBtn.textContent = window.i18nGet('translateBtn');
   }
 });
 
@@ -219,13 +218,13 @@ els.translateBtn.addEventListener('click', async () => {
 els.testBtn.addEventListener('click', async () => {
   const settings = collectSettings();
   if (!settings.apiKey && settings.provider !== 'ollama') {
-    showStatus('请填写 API Key', 'error');
+    showStatus(window.i18nGet('errorApiKeyRequired'), 'error');
     return;
   }
 
   els.testBtn.disabled = true;
-  els.testBtn.textContent = '测试中...';
-  showStatus('正在测试连接...', 'info');
+  els.testBtn.textContent = window.i18nGet('statusTesting');
+  showStatus(window.i18nGet('statusTestingConnection'), 'info');
 
   try {
     const result = await chrome.runtime.sendMessage({
@@ -234,15 +233,15 @@ els.testBtn.addEventListener('click', async () => {
     });
 
     if (result.success) {
-      showStatus(`✓ 连接成功！测试翻译: ${result.text}`, 'success');
+      showStatus(`${window.i18nGet('statusConnectionSuccess')} ${result.text}`, 'success');
     } else {
       throw new Error(result.error);
     }
   } catch (err) {
-    showStatus(`✗ 连接失败: ${err.message}`, 'error');
+    showStatus(`${window.i18nGet('statusConnectionFailed')} ${err.message}`, 'error');
   } finally {
     els.testBtn.disabled = false;
-    els.testBtn.textContent = '测试连接';
+    els.testBtn.textContent = window.i18nGet('testBtn');
   }
 });
 
@@ -250,7 +249,7 @@ els.testBtn.addEventListener('click', async () => {
 els.saveBtn.addEventListener('click', async () => {
   const settings = collectSettings();
   await chrome.storage.sync.set(settings);
-  showStatus('✓ 设置已保存', 'success');
+  showStatus(window.i18nGet('statusSettingsSaved'), 'success');
 });
 
 function showStatus(msg, type) {
@@ -288,7 +287,6 @@ els.translateFullPage.addEventListener('click', async () => {
     targetLang: els.targetLang.value
   };
 
-  // 保存当前语言设置，让划词翻译等也能使用更新后的语言
   await chrome.storage.sync.set({
     sourceLang: els.sourceLang.value,
     targetLang: els.targetLang.value
@@ -305,7 +303,7 @@ els.translateFullPage.addEventListener('click', async () => {
       try {
         await chrome.tabs.sendMessage(tab.id, msg);
       } catch (e) {
-        showStatus('无法注入翻译脚本', 'error');
+        showStatus(window.i18nGet('errorInjectScript'), 'error');
       }
     }, 300);
   }
@@ -321,7 +319,6 @@ els.translateFile.addEventListener('click', async () => {
   if (url.endsWith('.pdf') || url.includes('.pdf#') || url.includes('.pdf?') ||
       url.endsWith('.pptx') || url.endsWith('.ppt') ||
       url.endsWith('.docx') || url.endsWith('.doc')) {
-    // 通过 background 打开文件查看器
     await chrome.runtime.sendMessage({ action: 'openFileViewer', url: tab.url, tabId: tab.id });
   } else if (url.includes('office.com') || url.includes('docs.google.com') || url.includes('sharepoint.com')) {
     const msg = {
@@ -345,7 +342,7 @@ els.translateFile.addEventListener('click', async () => {
       }, 300);
     }
   } else {
-    showStatus('当前页面不是 PDF 或 Office 文件', 'error');
+    showStatus(window.i18nGet('errorNotSupportedFile'), 'error');
   }
   window.close();
 });
