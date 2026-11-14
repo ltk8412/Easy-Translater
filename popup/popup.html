@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Universal Translator</title>
+  <title data-i18n="appTitle">Easy Translator</title>
   <link rel="stylesheet" href="popup.css">
 </head>
 <body>
   <div class="container">
     <div class="tabs">
-      <button class="tab active" data-tab="translate" data-i18n="tabTranslate">翻译</button>
-      <button class="tab" data-tab="settings" data-i18n="tabSettings">设置</button>
-      <button class="tab" data-tab="about" data-i18n="tabAbout">关于</button>
+      <button class="tab active" data-tab="translate" data-i18n="tabTranslate">Translate</button>
+      <button class="tab" data-tab="settings" data-i18n="tabSettings">Settings</button>
+      <button class="tab" data-tab="about" data-i18n="tabAbout">About</button>
     </div>
 
     <!-- 翻译 Tab -->
@@ -20,48 +20,50 @@
         <button id="translateFullPage" class="btn-page">
           <span class="btn-page-icon">🌐</span>
           <span class="btn-page-text">
-            <strong data-i18n="translatePage">翻译整个页面</strong>
-            <small data-i18n="translatePageDesc">替换当前页面所有文字为译文</small>
+            <strong data-i18n="translatePage">Translate Entire Page</strong>
+            <small data-i18n="translatePageDesc">Replace all page text with translations</small>
           </span>
         </button>
         <button id="translateFile" class="btn-page">
           <span class="btn-page-icon">📄</span>
           <span class="btn-page-text">
-            <strong data-i18n="translateFile">翻译当前文件</strong>
-            <small data-i18n="translateFileDesc">翻译 PDF / PPT / DOCX 内容</small>
+            <strong data-i18n="translateFile">Translate Current File</strong>
+            <small data-i18n="translateFileDesc">Translate PDF / PPT / DOCX content</small>
           </span>
         </button>
       </div>
 
-      <div class="divider"><span data-i18n="orInputText">或输入文本</span></div>
+      <div class="divider"><span data-i18n="orInputText">or enter text</span></div>
 
       <div class="quick-translate">
-        <textarea id="inputText" data-i18n-placeholder="inputPlaceholder" placeholder="输入或粘贴要翻译的文本..." rows="3"></textarea>
+        <textarea id="inputText" data-i18n-placeholder="inputPlaceholder" placeholder="Enter or paste text to translate..." rows="3"></textarea>
         <div class="lang-row">
           <select id="sourceLang">
-            <option value="auto" data-i18n="autoDetect">自动检测</option>
+            <option value="auto" data-i18n="autoDetect">Auto Detect</option>
             <option value="English">English</option>
             <option value="中文">中文</option>
             <option value="日本語">日本語</option>
             <option value="한국어">한국어</option>
+            <option value="Tiếng Việt">Tiếng Việt</option>
             <option value="Français">Français</option>
             <option value="Deutsch">Deutsch</option>
             <option value="Español">Español</option>
             <option value="Русский">Русский</option>
           </select>
-          <button id="swapLang" data-i18n-title="swapLang" title="交换语言">⇄</button>
+          <button id="swapLang" data-i18n-title="swapLang" title="Swap languages">⇄</button>
           <select id="targetLang">
             <option value="中文">中文</option>
             <option value="English">English</option>
             <option value="日本語">日本語</option>
             <option value="한국어">한국어</option>
+            <option value="Tiếng Việt">Tiếng Việt</option>
             <option value="Français">Français</option>
             <option value="Deutsch">Deutsch</option>
             <option value="Español">Español</option>
             <option value="Русский">Русский</option>
           </select>
         </div>
-        <button id="translateBtn" class="btn-primary" data-i18n="translateBtn">翻译</button>
+        <button id="translateBtn" class="btn-primary" data-i18n="translateBtn">Translate</button>
         <div id="translateResult" class="result-box" hidden></div>
       </div>
     </div>
@@ -69,69 +71,72 @@
     <!-- 设置 Tab -->
     <div class="tab-content" id="tab-settings">
       <div class="settings-group">
-        <h3 data-i18n="modelConfigTitle">模型配置</h3>
-        <label data-i18n="providerLabel">API 提供商</label>
+        <h3 data-i18n="modelConfigTitle">Model Configuration</h3>
+        <label data-i18n="providerLabel">API Provider</label>
         <select id="provider">
-          <option value="openai">OpenAI 兼容 (OpenAI / DeepSeek / 通义千问 / 智谱等)</option>
-          <option value="anthropic">Anthropic Claude</option>
-          <option value="gemini">Google Gemini</option>
-          <option value="ollama">Ollama (本地模型)</option>
+          <option value="openai" data-i18n="providerOpenAI">OpenAI Compatible (OpenAI / DeepSeek / Qwen / GLM etc.)</option>
+          <option value="anthropic" data-i18n="providerAnthropic">Anthropic Claude</option>
+          <option value="gemini" data-i18n="providerGemini">Google Gemini</option>
+          <option value="ollama" data-i18n="providerOllama">Ollama (Local Model)</option>
         </select>
-        <p id="ollamaHint" class="hint" style="display:none; color:#f60; margin-top:4px">
-          ⚠️ 需要设置环境变量 <code>OLLAMA_ORIGINS=*</code> 后启动 Ollama，否则会被 CORS 阻止
+        <p id="ollamaHint" class="hint" style="display:none; color:#f60; margin-top:4px" data-i18n="ollamaHint">
+          Set environment variable OLLAMA_ORIGINS=* before starting Ollama, or CORS will block requests
         </p>
-        <label data-i18n="apiUrlLabel">API 地址</label>
+        <label data-i18n="apiUrlLabel">API URL</label>
         <input type="url" id="apiUrl" placeholder="https://api.openai.com/v1">
         <label data-i18n="apiKeyLabel">API Key</label>
         <div class="password-row">
-          <input type="password" id="apiKey" placeholder="sk-...">
-          <button id="toggleKey" class="btn-icon" data-i18n-title="showHide" title="显示/隐藏">👁</button>
+          <input type="password" id="apiKey" data-i18n-placeholder="apiKeyPlaceholder" placeholder="sk-...">
+          <button id="toggleKey" class="btn-icon" data-i18n-title="showHide" title="Show/Hide">👁</button>
         </div>
-        <label data-i18n="modelLabel">模型名称</label>
+        <label data-i18n="modelLabel">Model Name</label>
         <div class="model-row">
-          <input type="text" id="model" placeholder="gpt-4o-mini" list="modelList">
-          <button id="refreshModels" class="btn-icon" data-i18n-title="refreshModels" title="刷新可用模型">🔄</button>
+          <input type="text" id="model" data-i18n-placeholder="modelPlaceholder" placeholder="gpt-4o-mini" list="modelList">
+          <button id="refreshModels" class="btn-icon" data-i18n-title="refreshModels" title="Refresh Models">🔄</button>
         </div>
         <datalist id="modelList"></datalist>
-        <label data-i18n="styleLabel">翻译风格</label>
+        <label data-i18n="styleLabel">Translation Style</label>
         <select id="style">
-          <option value="natural" data-i18n="styleNatural">自然流畅</option>
-          <option value="formal" data-i18n="styleFormal">正式专业</option>
+          <option value="natural" data-i18n="styleNatural">Natural & Fluent</option>
+          <option value="formal" data-i18n="styleFormal">Formal & Professional</option>
         </select>
 
-        <label style="margin-top:16px">自定义 Prompt</label>
+        <label style="margin-top:16px" data-i18n="customPromptLabel">Custom Prompt</label>
         <div class="prompt-manager">
           <select id="promptSelector" style="width:100%;margin-bottom:8px">
-            <option value="default">默认 (根据翻译风格自动生成)</option>
+            <option value="default" data-i18n="promptDefault">Default (auto-generated based on translation style)</option>
           </select>
-          <textarea id="promptText" placeholder="你是一个专业翻译..." rows="4" style="width:100%;margin-bottom:8px;font-size:12px;font-family:monospace"></textarea>
+          <textarea id="promptText" data-i18n-placeholder="promptPlaceholder" placeholder="You are a professional translator..." rows="4" style="width:100%;margin-bottom:8px;font-size:12px;font-family:monospace"></textarea>
           <div style="display:flex;gap:8px;margin-bottom:8px">
-            <button id="savePrompt" class="btn-secondary" style="flex:1">💾 保存为新模板</button>
-            <button id="updatePrompt" class="btn-secondary" style="flex:1">✏️ 更新当前模板</button>
-            <button id="deletePrompt" class="btn-secondary" style="flex:1">🗑️ 删除</button>
+            <button id="savePrompt" class="btn-secondary" style="flex:1" data-i18n="promptSaveBtn">Save as New Template</button>
+            <button id="updatePrompt" class="btn-secondary" style="flex:1" data-i18n="promptUpdateBtn">Update Current Template</button>
+            <button id="deletePrompt" class="btn-secondary" style="flex:1" data-i18n="promptDeleteBtn">Delete</button>
           </div>
-          <p class="hint" style="font-size:11px;color:#888">
-            变量: <code>{src}</code> 源语言, <code>{tgt}</code> 目标语言<br>
-            系统会自动在批量翻译时加入 [#数字] 标记说明
+          <p class="hint" style="font-size:11px;color:#888" data-i18n="promptHint">
+            Variables: {src} source language, {tgt} target language. The system will automatically add [#number] markers for batch translation.
           </p>
         </div>
       </div>
 
       <div class="settings-group">
-        <h3 data-i18n="pageTranslateLabel">页面翻译</h3>
-        <label data-i18n="shortcutLabel">快捷键</label>
-        <p class="hint"><span data-i18n="shortcutHint">选中文本后按</span> <kbd>Alt+T</kbd> <span data-i18n="shortcutHint2">快速翻译</span></p>
-        <label data-i18n="displayModeLabel">显示模式</label>
+        <h3 data-i18n="pageTranslateLabel">Page Translation</h3>
+        <label data-i18n="shortcutLabel">Shortcut</label>
+        <p class="hint"><span data-i18n="shortcutHint">Select text and press</span> <kbd>Alt+T</kbd> <span data-i18n="shortcutHint2">for quick translation</span></p>
+        <label data-i18n="displayModeLabel">Display Mode</label>
         <select id="displayMode">
-          <option value="tooltip" data-i18n="displayModeTooltip">浮动提示框</option>
-          <option value="inline" data-i18n="displayModeInline">替换原文</option>
-          <option value="sidebar" data-i18n="displayModeSidebar">侧边栏</option>
+          <option value="tooltip" data-i18n="displayModeTooltip">Floating Tooltip</option>
+          <option value="inline" data-i18n="displayModeInline">Replace Inline</option>
+          <option value="sidebar" data-i18n="displayModeSidebar">Sidebar</option>
         </select>
+        <label class="checkbox-label" style="display:flex;align-items:center;gap:8px;margin-top:12px">
+          <input type="checkbox" id="enableSelectionPopup" checked>
+          <span data-i18n="enableSelectionPopup">Show translate button when text is selected</span>
+        </label>
       </div>
 
       <div class="actions">
-        <button id="testBtn" class="btn-secondary" data-i18n="testBtn">测试连接</button>
-        <button id="saveBtn" class="btn-primary" data-i18n="saveBtn">保存设置</button>
+        <button id="testBtn" class="btn-secondary" data-i18n="testBtn">Test Connection</button>
+        <button id="saveBtn" class="btn-primary" data-i18n="saveBtn">Save Settings</button>
       </div>
       <div id="statusMsg" class="status-msg"></div>
     </div>
@@ -140,21 +145,21 @@
     <div class="tab-content" id="tab-about">
       <div class="about">
         <h3 data-i18n="aboutTitle">Easy Translator v1.0.0</h3>
-        <p data-i18n="aboutDesc">支持翻译网页、PDF、PPT、DOCX等文件内容。</p>
-        <p data-i18n="aboutModels">可接入多种大模型：</p>
+        <p data-i18n="aboutDesc">Translate web pages, PDF, PPT, DOCX and more.</p>
+        <p data-i18n="aboutModels">Supports multiple LLM backends:</p>
         <ul>
-          <li>OpenAI GPT 系列</li>
-          <li>Anthropic Claude 系列</li>
-          <li>Google Gemini 系列</li>
-          <li>DeepSeek、通义千问、智谱等</li>
+          <li data-i18n="aboutModelOpenAI">OpenAI GPT Series</li>
+          <li data-i18n="aboutModelAnthropic">Anthropic Claude Series</li>
+          <li data-i18n="aboutModelGemini">Google Gemini Series</li>
+          <li data-i18n="aboutModelOthers">DeepSeek, Qwen, GLM and more</li>
         </ul>
-        <p class="hint" data-i18n="aboutUsage">使用方式：</p>
+        <p class="hint" data-i18n="aboutUsage">How to use:</p>
         <ol>
-          <li data-i18n="aboutUsage1">选中文本 → 右键 → 翻译选中文本</li>
-          <li data-i18n="aboutUsage2">选中文本 → 按 Alt+T</li>
-          <li data-i18n="aboutUsage3">点击图标打开弹窗输入文本</li>
+          <li data-i18n="aboutUsage1">Select text → Right-click → Translate</li>
+          <li data-i18n="aboutUsage2">Select text → Press Alt+T</li>
+          <li data-i18n="aboutUsage3">Click extension icon to translate input text</li>
         </ol>
-        <p class="hint" data-i18n="aboutPDF">PDF 支持：打开 PDF 文件后自动加载翻译工具</p>
+        <p class="hint" data-i18n="aboutPDF">PDF: Opens automatically in the translation viewer</p>
       </div>
     </div>
   </div>

@@ -2,14 +2,16 @@
 //  自定义 Prompt 管理
 // ═══════════════════════════════════════════════════
 
-let customPrompts = {}; // { promptId: { name: string, template: string } }
+let customPrompts = {};
+
+const pt = (k) => window.i18nGet ? window.i18nGet(k) : k;
 
 function loadPrompts(saved, activeId) {
   customPrompts = saved || {};
   const sel = document.getElementById('promptSelector');
   if (!sel) return;
 
-  sel.innerHTML = '<option value="default">默认 (根据翻译风格自动生成)</option>';
+  sel.innerHTML = '<option value="default">' + pt('promptDefault') + '</option>';
 
   Object.entries(customPrompts).forEach(([id, p]) => {
     const opt = document.createElement('option');
@@ -32,7 +34,7 @@ function updatePromptText() {
   const id = sel.value;
   if (id === 'default') {
     text.value = '';
-    text.placeholder = '使用默认 prompt（根据"翻译风格"自动生成）';
+    text.placeholder = pt('promptDefaultPlaceholder');
     if (updateBtn) updateBtn.disabled = true;
     if (deleteBtn) deleteBtn.disabled = true;
   } else {
@@ -57,29 +59,27 @@ function initPromptManager(showStatusFn) {
 
   if (!sel) return;
 
-  // Prompt 选择器变化
   sel.addEventListener('change', updatePromptText);
 
-  // 保存为新模板
   if (saveBtn) {
     saveBtn.addEventListener('click', () => {
       if (!text) return;
       const content = text.value.trim();
       if (!content) {
-        showStatusFn('请先输入 prompt 内容', 'error');
+        showStatusFn(pt('errorPromptEmpty'), 'error');
         return;
       }
-      const name = prompt('模板名称：', `自定义 ${Object.keys(customPrompts).length + 1}`);
+      const defaultName = pt('promptDefaultName') + ' ' + (Object.keys(customPrompts).length + 1);
+      const name = prompt(pt('promptNameLabel'), defaultName);
       if (!name) return;
 
       const id = 'custom_' + Date.now();
       customPrompts[id] = { name, template: content };
       loadPrompts(customPrompts, id);
-      showStatusFn('✓ 已保存新模板', 'success');
+      showStatusFn(pt('statusPromptSaved'), 'success');
     });
   }
 
-  // 更新当前模板
   if (updateBtn) {
     updateBtn.addEventListener('click', () => {
       const id = sel.value;
@@ -87,28 +87,26 @@ function initPromptManager(showStatusFn) {
       if (!text) return;
       const content = text.value.trim();
       if (!content) {
-        showStatusFn('请先输入 prompt 内容', 'error');
+        showStatusFn(pt('errorPromptEmpty'), 'error');
         return;
       }
       customPrompts[id].template = content;
-      showStatusFn('✓ 已更新模板', 'success');
+      showStatusFn(pt('statusPromptUpdated'), 'success');
     });
   }
 
-  // 删除模板
   if (deleteBtn) {
     deleteBtn.addEventListener('click', () => {
       const id = sel.value;
       if (id === 'default') return;
-      if (!confirm('确定删除此模板？')) return;
+      if (!confirm(pt('confirmPromptDelete'))) return;
       delete customPrompts[id];
       loadPrompts(customPrompts, 'default');
-      showStatusFn('✓ 已删除模板', 'success');
+      showStatusFn(pt('statusPromptDeleted'), 'success');
     });
   }
 }
 
-// 导出给 popup.js 使用
 window.PromptManager = {
   load: loadPrompts,
   init: initPromptManager,
